@@ -1,4 +1,3 @@
-import re
 import schedule
 import time
 from bs4 import BeautifulSoup
@@ -12,11 +11,7 @@ def sendPicks():
 	bets = soup.find_all('div', class_='PickPrediction__body')
 
 	for bet in bets:
-		pick_category = bet.find('div', class_='PickPrediction__pick-header').get_text().strip() # Money Line Pick
-		pick_event = re.findall(r'data-analytics-event-label=\"(.*)\" data-component', str(bet))[0] # TOR Maple Leafs @ MON Canadiens
-		pick = bet.find('div', class_='PickPrediction__pick-text').get_text().strip() # TOR Maple Leafs Win
-		pick_result = bet.find('button', class_='PickPrediction__toggle-betslip').get_text().strip().split("\n") # -6.5
-		full_pick = pick_category + ' \n' + '<b>' + pick_event + '</b> \n' + '<pre>' + pick + '</pre>' +  ' ' + pick_result[0]
+		full_pick = Pick().parsePick(bet)
 
 		connection = Database().connection()
 
@@ -40,7 +35,8 @@ def sendPicks():
 		else:
 			print('Old pick')
 
-schedule.every(30).minutes.do(sendPicks)
+# schedule.every(30).minutes.do(sendPicks)
+schedule.every(2).seconds.do(sendPicks)
 
 while True:
 	schedule.run_pending()
