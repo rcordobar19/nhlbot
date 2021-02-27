@@ -1,6 +1,7 @@
 import requests
 import re
 from requests.exceptions import HTTPError
+from database import Database
 
 class Pick:
 	def getPicks(self, endpoint):
@@ -33,3 +34,9 @@ class Pick:
 			}
 
 			return bet
+
+	def store(self, pick):
+		Database().execute("INSERT INTO nhl (pick, reasoning) VALUES (?, ?)", (pick['full_pick'], pick['reasoning'],))
+
+	def getFromDB(self, pick):
+		return Database().query("SELECT * FROM nhl WHERE reasoning=?", (pick['reasoning'],))
