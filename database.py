@@ -1,13 +1,15 @@
 import mariadb
+import settings
+import os
 
 class Database:
 	def __init__(self):
 		self._conn = mariadb.connect(
-			user="root",
-			password="qwer1234",
-			host="localhost",
-			port=3306,
-			database="bet_picks"
+			user=os.getenv("DATABASE_USERNAME"),
+			password=os.getenv("DATABASE_PASSWORD"),
+			host=os.getenv("DATABASE_HOST"),
+			port=int(os.getenv("DATABASE_PORT")),
+			database=os.getenv("DATABASE_NAME")
 		)
 		self._cursor = self._conn.cursor()
 

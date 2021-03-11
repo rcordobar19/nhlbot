@@ -1,9 +1,12 @@
+import os
+import settings
+
 from bs4 import BeautifulSoup
 from telegram import TelegramBot
 from pick import Pick
 
 
-picks = Pick().getPicks('https://www.pickswise.com/nhl/best-bets/')
+picks = Pick().getPicks(os.getenv("PICKS_URL"))
 soup = BeautifulSoup(picks, 'lxml')
 divs = soup.find_all('div', class_='CardV2')
 
